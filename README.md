@@ -60,7 +60,9 @@ vp run build
 vp preview
 ```
 
-`vp run build` menjalankan type-check, lalu menghasilkan situs di `dist/` dan server chat di `dist-server/`. `vp build` hanya membuat situsnya, tanpa type-check dan tanpa server chat.
+`vp run build` menjalankan type-check, membuat situs di `dist/`, menulis isi halaman dan data terstruktur ke `dist/index.html` (`scripts/prerender.mjs`), lalu membuat server chat di `dist-server/`. Selalu gunakan perintah ini untuk deploy, karena `vp build` saja menghasilkan halaman tanpa isi di HTML awal.
+
+Kode yang berjalan saat prerender tidak boleh memakai `window` atau `document` di luar `onMounted`. Saat domain berubah, perbarui `siteUrl` di `src/data/profile.ts`, tag canonical dan Open Graph di `index.html`, serta `public/robots.txt` dan `public/sitemap.xml`.
 
 ## Deploy
 

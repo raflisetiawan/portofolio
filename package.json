@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vp dev",
-    "build": "vue-tsc -b && vp build && vp run build:server",
+    "build": "vue-tsc -b && vp build && vp run prerender && vp run build:server",
+    "prerender": "vp build --ssr src/entry-server.ts --outDir dist-ssr && node scripts/prerender.mjs",
     "build:server": "vp pack server/standalone.ts --out-dir dist-server --no-config --report false",
     "typecheck": "vue-tsc -b",
     "preview": "vp preview",

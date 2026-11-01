@@ -1,13 +1,12 @@
-import { readonly, ref } from "vue";
+import { onMounted, readonly, ref } from "vue";
 
 export type Theme = "dark" | "light";
 
 const STORAGE_KEY = "theme";
 const THEME_COLORS: Record<Theme, string> = { dark: "#0e1412", light: "#f6f7f4" };
 
-// Shared across components. The inline script in index.html has already applied
-// the saved choice before first paint, so the document is the source of truth here.
-const theme = ref<Theme>(document.documentElement.dataset.theme === "light" ? "light" : "dark");
+// Shared across components. Starts dark to match the prerendered page, then syncs on mount.
+const theme = ref<Theme>("dark");
 
 function toggleTheme() {
   const next: Theme = theme.value === "dark" ? "light" : "dark";
@@ -22,5 +21,9 @@ function toggleTheme() {
 }
 
 export function useTheme() {
+  // The inline script in index.html has already applied the saved choice before first paint.
+  onMounted(() => {
+    theme.value = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  });
   return { theme: readonly(theme), toggleTheme };
 }
