@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --canvas: #0e1412;
+  --surface: #161e1b;
+  --ink: #e6ece8;
+  --muted: #9daca5;
+  --accent: #45c9b5;
+  --accent-soft: rgb(69 201 181 / 0.12);
+  --line: #2a3531;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #f6f7f4;
+  --surface: #ffffff;
+  --ink: #17201c;
+  --muted: #51605a;
+  --accent: #0f766e;
+  --accent-soft: rgb(15 118 110 / 0.07);
+  --line: #d5dcd7;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-line: var(--line);
+  --font-sans: "Schibsted Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--muted);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--canvas);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Dims the siblings of the hovered or focused card. Touch screens are left out
+     because a tap would leave the other cards dimmed. */
+  @media (hover: hover) and (pointer: fine) {
+    .dim-list > * {
+      transition: opacity 200ms ease;
+    }
+
+    .dim-list:has(> :hover) > :not(:hover),
+    .dim-list:has(> :focus-within) > :not(:focus-within, :hover) {
+      opacity: 0.5;
+    }
+  }
+}
