@@ -1,10 +1,9 @@
-// The `.js` extensions are required: Vercel runs this as native ES modules.
-import { education } from "../src/data/education.js";
-import { experience } from "../src/data/experience.js";
-import { profile } from "../src/data/profile.js";
-import { projects } from "../src/data/projects.js";
-import { skills } from "../src/data/skills.js";
-import { socials } from "../src/data/socials.js";
+import { education } from "../src/data/education.ts";
+import { experience } from "../src/data/experience.ts";
+import { profile } from "../src/data/profile.ts";
+import { projects } from "../src/data/projects.ts";
+import { skills } from "../src/data/skills.ts";
+import { socials } from "../src/data/socials.ts";
 
 const MODEL = "gemini-3.5-flash-lite";
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;

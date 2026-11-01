@@ -19,7 +19,7 @@ Widget "Ask AI" memakai Gemini API dari Google AI Studio.
 
 - `src/components/chat/` dan `src/composables/useChat.ts`: tampilan di browser.
 - `server/chat.ts`: aturan bot, model, batas pesan, dan pemanggilan Gemini. Pengetahuan bot diambil dari `src/data/`, jadi ikut berubah saat konten diedit.
-- `api/chat.ts`: endpoint untuk Vercel. `server/devPlugin.ts`: endpoint yang sama untuk `vp dev` dan `vp preview`.
+- `server/standalone.ts`: server Node untuk VPS. `server/devPlugin.ts`: endpoint yang sama untuk `vp dev` dan `vp preview`.
 
 API key hanya dipakai di server. Jangan menamainya dengan awalan `VITE_`, karena key akan ikut terkirim ke browser pengunjung.
 
@@ -42,7 +42,6 @@ Warna kedua tema ada di bagian atas `src/assets/main.css`.
 
 - **CV:** letakkan file di `public/cv.pdf`. Gunakan versi publik tanpa nomor telepon dan tanpa detail internal.
 - **Data pipeline demo:** di `src/data/projects.ts`, perbarui teksnya, tambahkan `url`, lalu hapus `placeholder: true`.
-- **Open Graph:** setelah domain diketahui, ubah `og:image` di `index.html` menjadi URL absolut, misalnya `https://domain-anda.com/og-image.png`.
 
 ## Pemeriksaan
 
@@ -61,14 +60,20 @@ vp run build
 vp preview
 ```
 
-`vp run build` menjalankan type-check lalu build ke folder `dist/`. `vp build` hanya menjalankan build tanpa type-check.
+`vp run build` menjalankan type-check, lalu menghasilkan situs di `dist/` dan server chat di `dist-server/`. `vp build` hanya membuat situsnya, tanpa type-check dan tanpa server chat.
 
 ## Deploy
 
-Deploy yang disarankan adalah [Vercel](https://vercel.com), karena `api/chat.ts` sudah mengikuti format Vercel Functions:
+Situs berjalan di VPS, di https://raflisetiawan.tech. Nginx melayani file statis dari `/var/www/portfolio/public` dan meneruskan `/api/chat` ke service `portfolio-chat` di `127.0.0.1:3001`. Konfigurasinya ada di folder `deploy/`.
 
-1. Hubungkan repo GitHub ke Vercel.
-2. Isi **Build command** `pnpm run build` dan **Output directory** `dist`.
-3. Tambahkan environment variable `PORTFOLIO_GEMINI_API_KEY`.
+Untuk deploy, commit perubahan, pastikan kunci SSH sudah dimuat, lalu jalankan dari **cmd**:
 
-[Netlify](https://www.netlify.com) dan [Cloudflare Pages](https://pages.cloudflare.com) bisa memakai pengaturan build yang sama, tetapi `api/chat.ts` perlu dipindahkan ke format function masing-masing layanan. `server/chat.ts` tidak perlu diubah, karena memakai `Request` dan `Response` standar. GitHub Pages hanya melayani file statis, jadi chatbot tidak bisa berjalan di sana.
+```bash
+ssh-add -l
+```
+
+```bash
+deploy\deploy.cmd
+```
+
+Skrip ini membangun situs di laptop lalu mengirim hasilnya ke server. Server menyimpan 5 build terakhir di `~/releases/`. Untuk rollback, jalankan `./deploy-portfolio.sh ~/releases/<arsip>.tar.gz` lewat `ssh staging`.

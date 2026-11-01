@@ -1,29 +1,8 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { loadEnv, type Plugin } from "vite-plus";
-import { handleChat } from "./chat.ts";
+import { serveChat } from "./nodeAdapter.ts";
 
-async function serveChat(req: IncomingMessage, res: ServerResponse, apiKey: string | undefined) {
-  const chunks: Buffer[] = [];
-  for await (const chunk of req) chunks.push(chunk as Buffer);
-
-  const headers = new Headers();
-  if (req.headers.origin) headers.set("origin", req.headers.origin);
-
-  const response = await handleChat(
-    new Request(`http://${req.headers.host}/api/chat`, {
-      method: req.method,
-      headers,
-      body: req.method === "POST" ? Buffer.concat(chunks) : undefined,
-    }),
-    apiKey,
-  );
-
-  res.statusCode = response.status;
-  response.headers.forEach((value, name) => res.setHeader(name, value));
-  res.end(await response.text());
-}
-
-/** Serves /api/chat locally for `vp dev` and `vp preview`. Vercel uses api/chat.ts instead. */
+/** Serves /api/chat locally for `vp dev` and `vp preview`. The VPS uses server/standalone.ts. */
 export function chatApiPlugin(): Plugin {
   let apiKey: string | undefined;
 

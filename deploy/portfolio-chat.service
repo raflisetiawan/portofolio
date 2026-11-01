@@ -1,0 +1,38 @@
+# Installed to /etc/systemd/system/portfolio-chat.service.
+[Unit]
+Description=Portfolio chat API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=portfolio
+Group=portfolio
+WorkingDirectory=/var/www/portfolio/server
+Environment=NODE_ENV=production
+Environment=PORT=3001
+# Holds PORTFOLIO_GEMINI_API_KEY. systemd reads it as root before dropping privileges.
+EnvironmentFile=/root/secrets/portfolio-chat.env
+ExecStart=/usr/bin/node /var/www/portfolio/server/standalone.mjs
+Restart=on-failure
+RestartSec=5
+
+MemoryMax=256M
+NoNewPrivileges=true
+CapabilityBoundingSet=
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

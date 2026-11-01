@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vp dev",
-    "build": "vue-tsc -b && vp build",
+    "build": "vue-tsc -b && vp build && vp run build:server",
+    "build:server": "vp pack server/standalone.ts --out-dir dist-server --no-config --report false",
     "typecheck": "vue-tsc -b",
     "preview": "vp preview",
     "prepare": "vp config"

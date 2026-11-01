@@ -1,0 +1,7 @@
+# These run on the Linux server, and CRLF line endings would break them.
+deploy/*.sh text eol=lf
+deploy/*.service text eol=lf
+deploy/nginx/* text eol=lf
+
+# cmd can mishandle labels in batch files without CRLF.
+*.cmd text eol=crlf
