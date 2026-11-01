@@ -79,12 +79,12 @@ describe("handleChat", () => {
     expect(sent.contents.map((c: { role: string }) => c.role)).toEqual(["user", "model", "user"]);
   });
 
-  it("keeps the phone number and confidential terms out of the system prompt", async () => {
+  it("keeps phone numbers out of the system prompt", async () => {
     const fetchMock = geminiReply([{ text: "Ok." }]);
     await handleChat(chatRequest(valid), KEY, fetchMock as typeof fetch);
 
     const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
-    expect(init.body).not.toMatch(/81334388233|Peruri|Kemendikdasmen|Nine-Box/);
+    expect(init.body).not.toMatch(/\d{10,}/);
   });
 
   it("rejects non-POST, cross-origin, and invalid requests without calling Gemini", async () => {

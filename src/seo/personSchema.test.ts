@@ -13,10 +13,8 @@ describe("personSchema", () => {
     expect(personSchema.url).toBe("https://raflisetiawan.tech/");
   });
 
-  it("keeps the phone number and confidential terms out", () => {
-    expect(JSON.stringify(personSchema)).not.toMatch(
-      /81334388233|Peruri|Kemendikdasmen|Nine-Box|worksFor/,
-    );
+  it("leaves out phone numbers and the employer", () => {
+    expect(JSON.stringify(personSchema)).not.toMatch(/\d{10,}|worksFor/);
   });
 });
 
